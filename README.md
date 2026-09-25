@@ -10,13 +10,15 @@ Python `3.13.0`
 
 Clone repo to location of your choice.
 
-Run this once from the project root:
+Create your Virtual Environement.
+From project root:
 
 ```powershell
 python -m venv .venv
 ```
 
 ### Virtual-environment instructions
+Always keep your VE active unless you need it to be deactivated for whatever reason.
 
 Activate your virtual environment:
 
