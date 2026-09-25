@@ -4,7 +4,7 @@ from app.schemas.item_category import ItemCategory
 
 class Item(BaseModel):
     id: str                     #Identifier, example: R1-beef-pie
-    restaurant_id: int          #ID of the restaurant the item belongs to, example: 1
+    restaurant_id: str          #ID of the restaurant the item belongs to, example: 1
     name: str                   #Display name of the item, example: Beef Pie          
     cuisine: Cuisine            #NORAM, ASIAN, MED, LATAM, EURO
     itemCategory: ItemCategory  #Side, Main, Dessert, Drink, Soup
