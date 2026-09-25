@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "North American Restaurant",
+    "cuisine": "NORAM",
+    "description": "Restaurant 1 description",
+    "image_url": "https://imgur.com/a/LCCoa9Z",
+    "is_open": true,
+    "rating": 4.3
+  },
+  {
+    "id": "2",
+    "name": "Asian Restaurant",
+    "cuisine": "ASIAN",
+    "description": "Restaurant 2 description",
+    "image_url": "https://imgur.com/a/LCCoa9Z",
+    "is_open": true,
+    "rating": 4.7
+  },
+  {
+    "id": "3",
+    "name": "Mediterranean Restaurant",
+    "cuisine": "MED",
+    "description": "Restaurant 3 description",
+    "image_url": "https://imgur.com/a/LCCoa9Z",
+    "is_open": true,
+    "rating": 3.9
+  },
+  {
+    "id": "4",
+    "name": "Latin American Restaurant",
+    "cuisine": "LATAM",
+    "description": "Restaurant 4 description",
+    "image_url": "https://imgur.com/a/LCCoa9Z",
+    "is_open": true,
+    "rating": 4.1
+  },
+  {
+    "id": "5",
+    "name": "European Restaurant",
+    "cuisine": "EURO",
+    "description": "Restaurant 5 description",
+    "image_url": "https://imgur.com/a/LCCoa9Z",
+    "is_open": true,
+    "rating": 4.8
+  }
+]
