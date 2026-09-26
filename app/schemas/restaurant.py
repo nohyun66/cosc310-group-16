@@ -1,5 +1,5 @@
 from pydantic import BaseModel, HttpUrl
-from schemas.cuisine import Cuisine
+from app.schemas.cuisine import Cuisine
 
 class Restaurant(BaseModel):
     id: str                     #Identifier, example: 34
