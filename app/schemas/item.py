@@ -1,5 +1,5 @@
 from pydantic import BaseModel, HttpUrl, Field
-from schemas.cuisine import Cuisine
+from app.schemas.cuisine import Cuisine
 from app.schemas.item_category import ItemCategory
 
 class Item(BaseModel):
