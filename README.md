@@ -75,7 +75,9 @@ items.json
 ```
 
 ## How to run tests:
-    (TODO)
+```powershell
+python -m pytest -v
+```
 
 ## Repository Structure
 
