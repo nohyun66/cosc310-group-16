@@ -4,13 +4,12 @@ Team name: Todos
 
 Team Members: Danny Myeong, Tom Huang,Shuai Liu, Logan Rasmuson.
 
-Lab Section: L02- Tuesday 2-4pm
-
-Part 2 — Team Agreement
+Lab Section: L02 - Tuesday 2-4pm
 
 **Team Values**  
    * What values will guide your team?  
-        - Accountability, and communication.  
+        - Accountability, and communication.
+
 **Meetings**  
    * How often will you meet? 
         - Twice a week
