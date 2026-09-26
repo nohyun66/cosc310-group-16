@@ -57,18 +57,52 @@ uvicorn app.main:app --reload
 Press `Ctrl+C` to exit the application.
 
 ## API endpoint paths:
-    (TODO)
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Check whether the API is running |
+| `GET` | `/restaurants` | Get all restaurants |
+| `GET` | `/restaurants/{restaurant_id}` | Get one restaurant by ID |
+
 ## /docs path:
     http://127.0.0.1:8000/docs
 ## Location of representative data:
-    (TODO)
+
+The representative data is stored in:
+
+```text
+restaurants.json
+items.json
+```
+
 ## How to run tests:
     (TODO)
+
 ## Repository Structure
 
 ```text
-app/          Source code
-data/         Database
-scrum/        SCRUM documentation
-tests/        Tests
+.
+├── app/                         # FastAPI application
+│   ├── api/                     # API routes
+│   │   └── routes/
+│   │       └── restaurant_router.py
+│   ├── core/                    # Application configuration
+│   ├── repositories/            # Data access layer
+│   │   └── restaurant_repository.py
+│   ├── schemas/                 # Pydantic models and enums
+│   │   ├── cuisine.py
+│   │   ├── item.py
+│   │   └── restaurant.py
+│   ├── services/                # Application business logic
+│   │   └── restaurant_service.py
+│   └── main.py                  # FastAPI application entry point
+├── data/                        # Representative JSON data
+│   ├── items.json
+│   └── restaurants.json
+├── scrum/                       # Team documentation
+│   └── team-agreement.md
+├── tests/                       # Automated tests
+│   └── test_main.py
+├── requirements.txt             # Python dependencies
+├── README.md                    # Project documentation
+└── .gitignore                   # Git ignore rules
 ```

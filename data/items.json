@@ -1,0 +1,252 @@
+[
+  {
+    "id": "R1-beef-pie",
+    "restaurant_id": 1,
+    "name": "Beef pie",
+    "cuisine": "NORAM",
+    "category": "Main",
+    "price": 1299,
+    "description": "Beef pie description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-cheeseburger",
+    "restaurant_id": 1,
+    "name": "Cheeseburger",
+    "cuisine": "NORAM",
+    "category": "Main",
+    "price": 1050,
+    "description": "Cheeseburger description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-chicken-pie",
+    "restaurant_id": 1,
+    "name": "Chicken pie",
+    "cuisine": "NORAM",
+    "category": "Main",
+    "price": 1249,
+    "description": "Chicken pie description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-chicken-wings",
+    "restaurant_id": 1,
+    "name": "Chicken wings",
+    "cuisine": "NORAM",
+    "category": "Side",
+    "price": 899,
+    "description": "Chicken wings description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-fried-chicken",
+    "restaurant_id": 1,
+    "name": "Fried chicken",
+    "cuisine": "NORAM",
+    "category": "Main",
+    "price": 1450,
+    "description": "Fried chicken description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-chocolate-cookie",
+    "restaurant_id": 1,
+    "name": "Chocolate cookie",
+    "cuisine": "NORAM",
+    "category": "Dessert",
+    "price": 350,
+    "description": "Chocolate cookie description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-pink-cupcake",
+    "restaurant_id": 1,
+    "name": "Pink cupcake",
+    "cuisine": "NORAM",
+    "category": "Dessert",
+    "price": 425,
+    "description": "Pink cupcake description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-strawberry-smoothie",
+    "restaurant_id": 1,
+    "name": "Strawberry smoothie",
+    "cuisine": "NORAM",
+    "category": "Drink",
+    "price": 599,
+    "description": "Strawberry smoothie description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R1-chocolate-cake",
+    "restaurant_id": 1,
+    "name": "Chocolate cake",
+    "cuisine": "NORAM",
+    "category": "Dessert",
+    "price": 675,
+    "description": "Chocolate cake description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-biryani-rice",
+    "restaurant_id": 2,
+    "name": "Biryani rice",
+    "cuisine": "ASIAN",
+    "category": "Main",
+    "price": 1399,
+    "description": "Biryani rice description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-chicken-rice",
+    "restaurant_id": 2,
+    "name": "Chicken rice",
+    "cuisine": "ASIAN",
+    "category": "Main",
+    "price": 1150,
+    "description": "Chicken rice description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-boba-tea",
+    "restaurant_id": 2,
+    "name": "Boba tea",
+    "cuisine": "ASIAN",
+    "category": "Drink",
+    "price": 549,
+    "description": "Boba tea description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-pork-dumplings",
+    "restaurant_id": 2,
+    "name": "Pork dumplings",
+    "cuisine": "ASIAN",
+    "category": "Side",
+    "price": 799,
+    "description": "Pork dumplings description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-california-roll",
+    "restaurant_id": 2,
+    "name": "California roll",
+    "cuisine": "ASIAN",
+    "category": "Main",
+    "price": 1099,
+    "description": "California roll description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R2-tuna-sashimi",
+    "restaurant_id": 2,
+    "name": "Tuna sashimi",
+    "cuisine": "ASIAN",
+    "category": "Main",
+    "price": 1850,
+    "description": "Tuna sashimi description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R3-shawarma",
+    "restaurant_id": 3,
+    "name": "Shawarma",
+    "cuisine": "MED",
+    "category": "Main",
+    "price": 1199,
+    "description": "Shawarma description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R3-greek-pasta-salad",
+    "restaurant_id": 3,
+    "name": "Greek pasta salad",
+    "cuisine": "MED",
+    "category": "Side",
+    "price": 899,
+    "description": "Greek pasta salad description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R4-beef-and-bean-burrito",
+    "restaurant_id": 4,
+    "name": "Beef and bean burrito",
+    "cuisine": "LATAM",
+    "category": "Main",
+    "price": 1099,
+    "description": "Beef and bean burrito description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R4-beef-tacos",
+    "restaurant_id": 4,
+    "name": "Beef tacos",
+    "cuisine": "LATAM",
+    "category": "Main",
+    "price": 950,
+    "description": "Beef tacos description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-americano",
+    "restaurant_id": 5,
+    "name": "Americano",
+    "cuisine": "EURO",
+    "category": "Drink",
+    "price": 375,
+    "description": "Americano description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-cappuccino",
+    "restaurant_id": 5,
+    "name": "Cappuccino",
+    "cuisine": "EURO",
+    "category": "Drink",
+    "price": 425,
+    "description": "Cappuccino description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-spaghetti-and-meatballs",
+    "restaurant_id": 5,
+    "name": "Spaghetti & meatballs",
+    "cuisine": "EURO",
+    "category": "Main",
+    "price": 1599,
+    "description": "Spaghetti & meatballs description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-souffle",
+    "restaurant_id": 5,
+    "name": "Souffle",
+    "cuisine": "EURO",
+    "category": "Dessert",
+    "price": 1050,
+    "description": "Souffle description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-chicken-noodle-soup",
+    "restaurant_id": 5,
+    "name": "Chicken noodle soup",
+    "cuisine": "EURO",
+    "category": "Soup",
+    "price": 725,
+    "description": "Chicken noodle soup description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  },
+  {
+    "id": "R5-cheese-pizza",
+    "restaurant_id": 5,
+    "name": "Cheese pizza",
+    "cuisine": "EURO",
+    "category": "Main",
+    "price": 1350,
+    "description": "Cheese pizza description",
+    "image_url": "https://imgur.com/a/LCCoa9Z"
+  }
+]
