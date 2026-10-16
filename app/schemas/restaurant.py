@@ -9,3 +9,11 @@ class Restaurant(BaseModel):
     image_url: HttpUrl = Field(...,description="URL for the image of the restaurant", examples=["https://imgur.com/a/LCCoa9Z"])
     is_open: bool = Field(...,description="Whether the restaurant is currently open")
     rating: float = Field(...,description="Average rating of the restaurant")
+
+class RestaurantCreate(BaseModel):
+    name: str = Field(..., min_length=1)
+    cuisine: Cuisine
+    description: str
+    image_url: HttpUrl
+    is_open: bool = True
+    rating: float = Field(default=0.0, ge=0, le=5)
