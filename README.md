@@ -63,6 +63,29 @@ Press `Ctrl+C` to exit the application.
 | `GET` | `/restaurants` | Get all restaurants |
 | `GET` | `/restaurants/{restaurant_id}` | Get one restaurant by ID |
 
+### Search restaurants
+
+Search by part of a restaurant name. Capitalization does not matter.
+
+Example:
+http://127.0.0.1:8000/restaurants?search=pizza
+
+Without search text, all restaurants are returned.
+If no names match, an empty list is returned.
+
+### Filter restaurants by cuisine
+
+Example:
+http://127.0.0.1:8000/restaurants?cuisine=ASIAN
+
+Supported values: NORAM, ASIAN, MED, LATAM, EURO.
+
+Without a cuisine filter, all restaurants are returned.
+If no restaurants match, an empty list is returned.
+Unsupported cuisine values return a 422 validation error.
+
+
+
 ## /docs path:
     http://127.0.0.1:8000/docs
 ## Location of representative data:
@@ -79,12 +102,25 @@ items.json
 python -m pytest -v
 ```
 
+Restaurant tests use temporary copies or temporary test records so that
+the representative data is not changed.
+
+### Continuous integration
+
+GitHub Actions installs the project dependencies and runs pytest
+automatically on pushes and pull requests.
+
+View the results in the repository's Actions tab.
+
 ## Repository Structure
 
 ```text
 .
+├── .github/
+│   └── workflows/
+│       └── tests.yml             # GitHub Actions test workflow
 ├── app/                         # FastAPI application
-│   ├── api/                     # API routes
+│   ├── api/
 │   │   └── routes/
 │   │       └── restaurant_router.py
 │   ├── core/                    # Application configuration
@@ -92,6 +128,7 @@ python -m pytest -v
 │   │   └── restaurant_repository.py
 │   ├── schemas/                 # Pydantic models and enums
 │   │   ├── cuisine.py
+│   │   ├── item_category.py
 │   │   ├── item.py
 │   │   └── restaurant.py
 │   ├── services/                # Application business logic
@@ -100,10 +137,13 @@ python -m pytest -v
 ├── data/                        # Representative JSON data
 │   ├── items.json
 │   └── restaurants.json
+├── docs/                        # Project documentation
 ├── scrum/                       # Team documentation
 │   └── team-agreement.md
 ├── tests/                       # Automated tests
-│   └── test_main.py
+│   ├── test_main.py
+│   ├── test_restaurant_search.py
+│   └── test_restaurant_filter.py
 ├── requirements.txt             # Python dependencies
 ├── README.md                    # Project documentation
 └── .gitignore                   # Git ignore rules
