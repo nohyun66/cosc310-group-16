@@ -49,3 +49,22 @@ def test_missing_restaurant_returns_404(isolated_restaurants):
     response = TestClient(app).get("/restaurants/does-not-exist")
 
     assert response.status_code == 404
+def test_restaurant_menu(isolated_restaurants):
+    response = TestClient(app).get("/restaurants/1/menu")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 9
+    assert response.json()[0]["name"] == "Beef pie"
+
+def test_get_menu_item(isolated_restaurants):
+    response = TestClient(app).get("/restaurants/1/menu/R1-beef-pie")
+
+    assert response.status_code == 200
+    assert response.json()["id"] == "R1-beef-pie"
+    assert response.json()["name"] == "Beef pie"
+    assert response.json()["price"] == 1299
+
+def test_missing_menu_item_returns_404(isolated_restaurants):
+    response = TestClient(app).get("/restaurants/1/menu/does-not-exist")
+
+    assert response.status_code == 404
