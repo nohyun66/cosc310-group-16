@@ -45,11 +45,11 @@ class ItemService:
 
         return item
 
-    def create_menu_item(self, restaurant_id: int, name: str, cuisine: Cuisine, 
+    def create_menu_item(self, restaurant_id: str, name: str, cuisine: Cuisine, 
                          category: ItemCategory, price: int, 
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
-        if(self.restaurant_repository.get_by_id(restaurant_id) is None):
+        if self.restaurant_repository.get_by_id(restaurant_id) is None:
             raise HTTPException(
                 status_code=404,
                 detail=f"Restaurant ID: {restaurant_id} not found")
@@ -62,12 +62,12 @@ class ItemService:
                     status_code=409,
                     detail=f"Item ID: {new_item_id} already exists")
 
-        if(price <= 0):
+        if price <= 0:
             raise HTTPException(
                 status_code=422,
                 detail=f"Price: ({price}) must be greater than 0")
         
-        new_item = Item(id=new_item_id, restaurant_id=restaurant_id, name=name, 
+        new_item = Item(id=new_item_id, restaurant_id=int(restaurant_id), name=name, 
                               cuisine=cuisine, category=category, price=price,
                               description=description, image_url=image_url)
         
