@@ -11,3 +11,11 @@ class Item(BaseModel):
     price: int = Field(..., description="Price in cents", examples=[1499])
     description: str = Field(..., description="Description of the item")
     image_url: HttpUrl = Field(..., description="Image of the item", examples=["https://imgur.com/a/LCCoa9Z"])
+
+class ItemCreate(BaseModel):
+    name: str
+    cuisine: Cuisine
+    category: ItemCategory
+    price: int
+    description: str = Field(default="Placeholder description")
+    image_url: HttpUrl = Field(default="https://imgur.com/a/LCCoa9Z")
