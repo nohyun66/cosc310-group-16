@@ -53,6 +53,7 @@ In the root directory:
 ```powershell
 uvicorn app.main:app --reload 
 ```
+Open `http://127.0.0.1:8000/` in your browser to access the application.
 
 Press `Ctrl+C` to exit the application.
 

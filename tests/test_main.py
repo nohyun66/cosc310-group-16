@@ -30,6 +30,37 @@ def test_health_endpoint():
     assert response.json() == {"status": "ok"}
 
 
+def test_frontend_page_is_served():
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert 'id="restaurants"' in response.text
+    assert 'name="search"' in response.text
+    assert 'name="cuisine"' in response.text
+    assert "params.set(\"search\", search)" in response.text
+    assert "params.set(\"cuisine\", cuisine)" in response.text
+    assert "restaurant.html?id=" in response.text
+
+
+def test_restaurant_details_page_is_served():
+    response = TestClient(app).get("/restaurant.html")
+
+    assert response.status_code == 200
+    assert 'id="restaurant-description"' in response.text
+    assert 'id="restaurant-image"' in response.text
+    assert 'id="restaurant-open"' in response.text
+    assert 'fetch(`/restaurants/${encodeURIComponent(restaurantId)}/menu`)' in response.text
+    assert "restaurant.html?id=" in response.text
+
+
+def test_restaurant_details_page_is_served():
+    response = TestClient(app).get("/restaurant.html")
+
+    assert response.status_code == 200
+    assert 'id="restaurant-description"' in response.text
+    assert 'id="menu"' in response.text
+
+
 def test_restaurant_list_endpoint(isolated_restaurants):
     response = TestClient(app).get("/restaurants")
     assert response.status_code == 200
