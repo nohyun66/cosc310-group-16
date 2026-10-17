@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from app.schemas.item import Item
+from app.schemas.item import Item, ItemCreate
 
 DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "items.json"
 
@@ -36,3 +36,21 @@ class ItemRepository:
             if item.id == item_id:
                 return item
         return None
+
+    def create_item(self, restaurant_id: str, item_name: str, new_item: ItemCreate) -> Item | None:
+        item_id = "R" + restaurant_id + "-" + item_name.lower()
+        items = self.get_all_items()
+
+        new_Item = Item(id=item_id,
+                    restaurant_id=restaurant_id
+                    **new_item.model_dump()
+                )
+
+        with open(DATA_PATH, "w", encoding="utf-8") as data_file:
+                    json.dump(
+                        [item.model_dump(mode="json") for item in items],
+                        data_file,
+                        indent=2
+                    )
+        
+        return new_Item
