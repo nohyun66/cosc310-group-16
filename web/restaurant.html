@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restaurant details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 16px;
+    }
+
+    #restaurant-image {
+      display: block;
+      height: 240px;
+      max-width: 640px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    #restaurant-rating,
+    #restaurant-open {
+      margin-top: 6px;
+    }
+
+    #restaurant-description {
+      margin: 16px 0;
+      max-width: 640px;
+    }
+
+    #menu {
+      border: 1px solid black;
+      list-style: none;
+      margin: 0;
+      max-width: 760px;
+      padding: 0;
+    }
+
+    .menu-item {
+      align-items: center;
+      border-bottom: 1px solid black;
+      display: flex;
+      gap: 16px;
+      min-height: 80px;
+      padding: 8px;
+    }
+
+    .menu-item:last-child {
+      border-bottom: 0;
+    }
+
+    .menu-item img {
+      height: 64px;
+      object-fit: cover;
+      width: 64px;
+    }
+
+    .menu-item-info {
+      flex: 1;
+    }
+
+    .menu-item-name,
+    .menu-item-category,
+    .menu-item-description {
+      margin: 4px 0;
+    }
+
+    .menu-item-price {
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <a href="/">Back to restaurants</a>
+  <p id="status" aria-live="polite">Loading restaurant...</p>
+  <main id="restaurant" hidden>
+    <img id="restaurant-image" alt="">
+    <h1 id="restaurant-name"></h1>
+    <div id="restaurant-cuisine"></div>
+    <div id="restaurant-rating"></div>
+    <div id="restaurant-open"></div>
+    <p id="restaurant-description"></p>
+    <h2>Menu</h2>
+    <p id="menu-empty" hidden>No menu items found.</p>
+    <ul id="menu"></ul>
+  </main>
+
+  <script>
+    const status = document.getElementById("status");
+    const restaurantPage = document.getElementById("restaurant");
+    const menu = document.getElementById("menu");
+    const restaurantId = new URLSearchParams(window.location.search).get("id");
+
+    function createMenuItem(item) {
+      const entry = document.createElement("li");
+      entry.className = "menu-item";
+
+      const image = document.createElement("img");
+      image.src = item.image_url;
+      image.alt = `${item.name}`;
+
+      const info = document.createElement("div");
+      info.className = "menu-item-info";
+      const name = document.createElement("h3");
+      name.className = "menu-item-name";
+      name.textContent = item.name;
+      const category = document.createElement("p");
+      category.className = "menu-item-category";
+      category.textContent = item.category;
+      const description = document.createElement("p");
+      description.className = "menu-item-description";
+      description.textContent = item.description;
+      info.append(name, category, description);
+
+      const price = document.createElement("strong");
+      price.className = "menu-item-price";
+      price.textContent = new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: "CAD",
+      }).format(item.price / 100);
+
+      entry.append(image, info, price);
+      return entry;
+    }
+
+    async function loadRestaurant() {
+      if (!restaurantId) {
+        status.textContent = "No restaurant was specified.";
+        return;
+      }
+
+      try {
+        const [restaurantResponse, menuResponse] = await Promise.all([
+          fetch(`/restaurants/${encodeURIComponent(restaurantId)}`),
+          fetch(`/restaurants/${encodeURIComponent(restaurantId)}/menu`),
+        ]);
+
+        if (!restaurantResponse.ok) {
+          throw new Error(
+            restaurantResponse.status === 404
+              ? "Restaurant not found."
+              : `Could not load restaurant (${restaurantResponse.status}).`
+          );
+        }
+        if (!menuResponse.ok) {
+          throw new Error(`Could not load menu (${menuResponse.status}).`);
+        }
+
+        const [restaurant, items] = await Promise.all([
+          restaurantResponse.json(),
+          menuResponse.json(),
+        ]);
+
+        document.title = restaurant.name;
+        document.getElementById("restaurant-image").src = restaurant.image_url;
+        document.getElementById("restaurant-image").alt = restaurant.name;
+        document.getElementById("restaurant-name").textContent = restaurant.name;
+        document.getElementById("restaurant-cuisine").textContent =
+          `Cuisine: ${restaurant.cuisine}`;
+        document.getElementById("restaurant-rating").textContent =
+          `Rating: ${restaurant.rating} ☆`;
+        document.getElementById("restaurant-open").textContent =
+          restaurant.is_open ? "Open" : "Closed";
+        document.getElementById("restaurant-description").textContent =
+          restaurant.description;
+        menu.replaceChildren(...items.map(createMenuItem));
+        document.getElementById("menu-empty").hidden = items.length > 0;
+        restaurantPage.hidden = false;
+        status.textContent = "";
+      } catch (error) {
+        status.textContent = `Could not load restaurant: ${error.message}`;
+      }
+    }
+
+    loadRestaurant();
+  </script>
+</body>
+</html>
