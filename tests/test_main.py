@@ -4,7 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.repositories import restaurant_repository
+from app.repositories import item_repository, restaurant_repository
+from app.repositories.item_repository import ItemRepository
 from app.repositories.restaurant_repository import RestaurantRepository
 
 
@@ -13,6 +14,13 @@ def isolated_restaurants(tmp_path, monkeypatch):
     test_file = tmp_path / "restaurants.json"
     shutil.copyfile(restaurant_repository.DATA_PATH, test_file)
     monkeypatch.setattr(restaurant_repository, "DATA_PATH", test_file)
+
+
+@pytest.fixture
+def isolated_items(tmp_path, monkeypatch):
+    test_file = tmp_path / "items.json"
+    shutil.copyfile(item_repository.DATA_PATH, test_file)
+    monkeypatch.setattr(item_repository, "DATA_PATH", test_file)
 
 
 def test_health_endpoint():
@@ -62,6 +70,83 @@ def test_missing_menu_item_returns_404(isolated_restaurants):
     response = TestClient(app).get("/restaurants/1/menu/does-not-exist")
 
     assert response.status_code == 404
+
+
+def test_create_menu_item(isolated_items):
+    new_item = {
+        "name": "Test Item",
+        "cuisine": "ASIAN",
+        "category": "Main",
+        "price": 999,
+        "description": "Test description",
+        "image_url": "https://example.com/test-item.jpg",
+    }
+
+    response = TestClient(app).post("/restaurants/1/menu", json=new_item)
+
+    assert response.status_code == 201
+    assert response.json()["id"] == "R1-test-item"
+    assert response.json()["restaurant_id"] == 1
+
+    saved = ItemRepository().get_by_item_id("R1-test-item")
+    assert saved is not None
+    assert saved.name == "Test Item"
+
+
+def test_create_menu_item_rejects_invalid_cuisine(isolated_items):
+    new_item = {
+        "name": "Test Item",
+        "cuisine": "INVALID",
+        "category": "Main",
+        "price": 999,
+    }
+
+    response = TestClient(app).post("/restaurants/1/menu", json=new_item)
+
+    assert response.status_code == 422
+
+
+def test_update_menu_item(isolated_items):
+    updated_data = {
+        "name": "Updated Beef Pie",
+        "cuisine": "NORAM",
+        "category": "Main",
+        "price": 1399,
+        "description": "Updated description",
+        "image_url": "https://example.com/updated-beef-pie.jpg",
+    }
+
+    response = TestClient(app).put(
+        "/restaurants/1/menu/R1-beef-pie",
+        json=updated_data,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["id"] == "R1-beef-pie"
+    assert response.json()["name"] == "Updated Beef Pie"
+    assert response.json()["price"] == 1399
+
+    saved = ItemRepository().get_by_item_id("R1-beef-pie")
+    assert saved is not None
+    assert saved.description == "Updated description"
+
+
+def test_update_menu_item_returns_404_for_missing_item(isolated_items):
+    updated_data = {
+        "name": "Unknown Item",
+        "cuisine": "NORAM",
+        "category": "Main",
+        "price": 999,
+    }
+
+    response = TestClient(app).put(
+        "/restaurants/1/menu/does-not-exist",
+        json=updated_data,
+    )
+
+    assert response.status_code == 404
+
+
 def test_restaurant_search(isolated_restaurants):
     response = TestClient(app).get("/restaurants?search=Asian")
 
