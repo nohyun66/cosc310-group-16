@@ -1,5 +1,6 @@
+from fastapi import APIRouter, Query
 
-from fastapi import APIRouter
+from app.schemas.cuisine import Cuisine
 from app.schemas.restaurant import Restaurant, RestaurantCreate
 from app.schemas.item import Item
 from app.services.restaurant_service import RestaurantService
@@ -8,12 +9,29 @@ from app.services.item_service import ItemService
 router = APIRouter(prefix="/restaurants", tags=["restaurants"])
 
 
-@router.get("", response_model=list[Restaurant])
-def get_all_restaurants(search: str | None = None, cuisine: str | None = None):
-    if search is not None or cuisine is not None:
-        return RestaurantService().search_restaurants(search, cuisine)
-
-    return RestaurantService().get_all_restaurants()
+@router.get(
+    "",
+    response_model=list[Restaurant],
+    summary="List, search or filter restaurants",
+    description=(
+        "Search restaurant names without matching capitalization, "
+        "filter by cuisine, or use both. No matches return an empty list."
+    ),
+    responses={
+        422: {"description": "The cuisine value is not supported."},
+    },
+)
+def get_all_restaurants(
+    search: str | None = Query(
+        default=None,
+        description="Text to match within a restaurant name.",
+    ),
+    cuisine: Cuisine | None = Query(
+        default=None,
+        description="Cuisine: NORAM, ASIAN, MED, LATAM or EURO.",
+    ),
+):
+    return RestaurantService().search_restaurants(search, cuisine)
 
 
 @router.get("/{restaurant_id}", response_model=Restaurant)
@@ -38,4 +56,7 @@ def create_restaurant(restaurant_data: RestaurantCreate):
 
 @router.put("/{restaurant_id}", response_model=Restaurant)
 def update_restaurant(restaurant_id: str, restaurant_data: RestaurantCreate):
-    return RestaurantService().update_restaurant(restaurant_id, restaurant_data)
+    return RestaurantService().update_restaurant(
+        restaurant_id,
+        restaurant_data,
+    )
