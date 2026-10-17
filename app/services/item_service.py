@@ -11,7 +11,7 @@ class ItemService:
         self.repository = ItemRepository()
         self.restaurant_repository = RestaurantRepository()
 
-    def get_restaurant_menu(self, restaurant_id: str) -> list[Item]:
+    def get_restaurant_menu(self, restaurant_id: int) -> list[Item]:
         """Return all menu items for a restaurant."""
 
         restaurant = self.restaurant_repository.get_by_id(restaurant_id)
@@ -24,7 +24,7 @@ class ItemService:
 
         return self.repository.get_by_restaurant_id(restaurant_id)
 
-    def get_menu_item(self, restaurant_id: str, item_id: str) -> Item:
+    def get_menu_item(self, restaurant_id: int, item_id: str) -> Item:
         """Return a specific menu item from a restaurant."""
 
         restaurant = self.restaurant_repository.get_by_id(restaurant_id)
@@ -45,7 +45,7 @@ class ItemService:
 
         return item
 
-    def create_menu_item(self, restaurant_id: str, name: str, cuisine: Cuisine, 
+    def create_menu_item(self, restaurant_id: int, name: str, cuisine: Cuisine, 
                          category: ItemCategory, price: int, 
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
@@ -67,8 +67,40 @@ class ItemService:
                 status_code=422,
                 detail=f"Price: ({price}) must be greater than 0")
         
-        new_item = Item(id=new_item_id, restaurant_id=int(restaurant_id), name=name, 
+        new_item = Item(id=new_item_id, restaurant_id=restaurant_id, name=name, 
                               cuisine=cuisine, category=category, price=price,
                               description=description, image_url=image_url)
         
         return self.repository.create_item(new_item)
+
+    def update_menu_item(self, item_id: str, restaurant_id: int, name: str, cuisine: Cuisine, 
+                         category: ItemCategory, price: int, 
+                         description: str = "Placeholder description", 
+                         image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
+        item = self.get_menu_item(restaurant_id, item_id)
+
+        if price <= 0:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Price: ({price}) must be greater than 0"
+            )
+
+        new_item = Item(
+            id=item.id,
+            restaurant_id=item.restaurant_id,
+            name=name,
+            cuisine=cuisine,
+            category=category,
+            price=price,
+            description=description,
+            image_url=image_url,
+        )
+
+        updated_item = self.repository.update_item(new_item)
+        if updated_item is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Menu item {item_id} not found"
+            )
+
+        return updated_item

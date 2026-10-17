@@ -49,3 +49,21 @@ class ItemRepository:
                     )
         
         return new_item
+
+    def update_item(self, updated_item: Item) -> Item | None:
+        items = self.get_all_items()
+
+        for idx, item in enumerate(items):
+            if item.id == updated_item.id:
+                items[idx] = updated_item
+
+                with open(DATA_PATH, "w", encoding="utf-8") as data_file:
+                    json.dump(
+                        [item.model_dump(mode="json") for item in items],
+                        data_file,
+                        indent=2
+                    )
+
+                return updated_item
+
+        return None
