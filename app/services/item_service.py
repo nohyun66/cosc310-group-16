@@ -11,7 +11,7 @@ class ItemService:
         self.repository = ItemRepository()
         self.restaurant_repository = RestaurantRepository()
 
-    def get_restaurant_menu(self, restaurant_id: int) -> list[Item]:
+    def get_restaurant_menu(self, restaurant_id: str) -> list[Item]:
         """Return all menu items for a restaurant."""
 
         restaurant = self.restaurant_repository.get_by_id(restaurant_id)
@@ -24,7 +24,7 @@ class ItemService:
 
         return self.repository.get_by_restaurant_id(restaurant_id)
 
-    def get_menu_item(self, restaurant_id: int, item_id: str) -> Item:
+    def get_menu_item(self, restaurant_id: str, item_id: str) -> Item:
         """Return a specific menu item from a restaurant."""
 
         restaurant = self.restaurant_repository.get_by_id(restaurant_id)
@@ -57,9 +57,8 @@ class ItemService:
                 detail=f"Price: ({item.price}) must be greater than 0")
 
         return None
-        
 
-    def create_menu_item(self, restaurant_id: int, name: str, cuisine: Cuisine, 
+    def create_menu_item(self, restaurant_id: str, name: str, cuisine: Cuisine, 
                          category: ItemCategory, price: int, 
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
@@ -79,7 +78,7 @@ class ItemService:
         self.validate_menu_item(new_item)
         return self.repository.create_item(new_item)
 
-    def update_menu_item(self, item_id: str, restaurant_id: int, name: str, cuisine: Cuisine, 
+    def update_menu_item(self, item_id: str, restaurant_id: str, name: str, cuisine: Cuisine, 
                          category: ItemCategory, price: int, 
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:

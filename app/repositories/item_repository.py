@@ -26,7 +26,7 @@ class ItemRepository:
         restaurant_items = []
 
         for item in items:
-            if str(item.restaurant_id) == restaurant_id:
+            if item.restaurant_id == restaurant_id:
                 restaurant_items.append(item)
 
         return restaurant_items
