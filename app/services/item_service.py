@@ -94,6 +94,8 @@ class ItemService:
             price=price,
             description=description,
             image_url=image_url,
+            is_available=item.is_available,
+            is_active=item.is_active,
         )
 
         updated_item = self.repository.update_item(new_item)
@@ -104,3 +106,47 @@ class ItemService:
             )
 
         return updated_item
+
+    def update_menu_item_status(
+        self,
+        restaurant_id: str,
+        item_id: str,
+        is_available: bool,
+        is_active: bool,
+    ) -> Item:
+        item = self.get_menu_item(restaurant_id, item_id)
+
+        item.is_available = is_available
+        item.is_active = is_active
+
+        saved_item = self.repository.update_item(item)
+
+        if saved_item is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Menu item {item_id} not found",
+            )
+
+        return saved_item
+
+    def get_orderable_menu_item(
+        self,
+        restaurant_id: str,
+        item_id: str,
+    ) -> Item:
+        item = self.get_menu_item(restaurant_id, item_id)
+
+        if not item.is_active:
+            raise HTTPException(
+                status_code=409,
+                detail="Menu item is deactivated",
+            )
+
+        if not item.is_available:
+            raise HTTPException(
+                status_code=409,
+                detail="Menu item is unavailable",
+            )
+
+        return item
+         

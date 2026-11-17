@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.schemas.item import Item, ItemCreate
+from app.schemas.item import Item, ItemCreate, ItemStatusUpdate
 from app.services.item_service import ItemService
 
 router = APIRouter(prefix="/restaurants", tags=["items"])
@@ -29,4 +29,28 @@ def update_item(restaurant_id: str, item_id: str, updated_item: ItemCreate):
         price=updated_item.price,
         description=updated_item.description,
         image_url=updated_item.image_url,
+    )
+
+@router.patch(
+    "/{restaurant_id}/menu/{item_id}/status",
+    response_model=Item,
+    summary="Update menu-item availability",
+    description=(
+        "Change an item's availability and active status "
+        "without changing its other details."
+    ),
+    responses={
+        404: {"description": "Restaurant or menu item not found."},
+    },
+)
+def update_item_status(
+    restaurant_id: str,
+    item_id: str,
+    status: ItemStatusUpdate,
+):
+    return ItemService().update_menu_item_status(
+        restaurant_id=restaurant_id,
+        item_id=item_id,
+        is_available=status.is_available,
+        is_active=status.is_active,
     )

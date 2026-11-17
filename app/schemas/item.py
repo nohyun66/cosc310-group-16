@@ -11,6 +11,14 @@ class Item(BaseModel):
     price: int = Field(..., description="Price in cents", examples=[1499])
     description: str = Field(..., description="Description of the item")
     image_url: HttpUrl = Field(..., description="Image of the item", examples=["https://imgur.com/a/LCCoa9Z"])
+    is_available: bool = Field(
+        default=True,
+        description="Whether the item is currently available to order",
+    )
+    is_active: bool = Field(
+        default=True,
+        description="Whether the item is active",
+    )
 
 class ItemCreate(BaseModel):
     name: str
@@ -19,3 +27,8 @@ class ItemCreate(BaseModel):
     price: int
     description: str = Field(default="Placeholder description")
     image_url: HttpUrl = Field(default="https://imgur.com/a/LCCoa9Z")
+
+
+class ItemStatusUpdate(BaseModel):
+    is_available: bool
+    is_active: bool
