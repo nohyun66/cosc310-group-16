@@ -4,9 +4,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.repositories import item_repository, restaurant_repository
+from app.repositories import item_repository, restaurant_repository, customer_repository
 from app.repositories.item_repository import ItemRepository
 from app.repositories.restaurant_repository import RestaurantRepository
+from app.repositories.customer_repository import CustomerRepository
+from app.services.customer_service import password_hash
 
 
 @pytest.fixture
@@ -21,6 +23,22 @@ def isolated_items(tmp_path, monkeypatch):
     test_file = tmp_path / "items.json"
     shutil.copyfile(item_repository.DATA_PATH, test_file)
     monkeypatch.setattr(item_repository, "DATA_PATH", test_file)
+
+@pytest.fixture
+def isolated_customers(tmp_path, monkeypatch):
+    test_file = tmp_path / "customers.json"
+    test_file.write_text("[]", encoding="utf-8")
+    monkeypatch.setattr(customer_repository, "DATA_PATH", test_file)
+    return test_file
+
+@pytest.fixture
+def registration_details():
+    return {
+        "name": "Demo Customer",
+        "email": "demo@example.com",
+        "password": "DemoPassword123!",
+        "delivery_address": "123 Demo Street",
+    }
 
 
 def test_health_endpoint():
@@ -234,3 +252,76 @@ def test_update_restaurant(isolated_restaurants):
 
     assert saved is not None
     assert saved.name == "Updated Korean BBQ"
+
+def test_registration_saves_customer(
+    isolated_customers, registration_details
+):
+    response = TestClient(app).post(
+        "/customers", json=registration_details
+    )
+
+    assert response.status_code == 201
+    result = response.json()
+    assert result["name"] == "Demo Customer"
+    assert result["role"] == "customer"
+    assert result["is_active"] is True
+    assert "password" not in result
+    assert "password_hash" not in result
+
+    saved = CustomerRepository().get_by_id(result["id"])
+
+    assert saved is not None
+    assert saved.email == "demo@example.com"
+    assert saved.password_hash != registration_details["password"]
+    assert password_hash.verify(
+        registration_details["password"], saved.password_hash
+    )
+    assert registration_details["password"] not in (
+        isolated_customers.read_text(encoding="utf-8")
+    )
+
+
+def test_duplicate_email_does_not_change_storage(
+    isolated_customers, registration_details
+):
+    client = TestClient(app)
+    response = client.post("/customers", json=registration_details)
+    assert response.status_code == 201
+
+    before = isolated_customers.read_bytes()
+    registration_details["email"] = " DEMO@EXAMPLE.COM "
+
+    response = client.post("/customers", json=registration_details)
+
+    assert response.status_code == 409
+    assert isolated_customers.read_bytes() == before
+
+
+def test_short_password_is_rejected(
+    isolated_customers, registration_details
+):
+    registration_details["password"] = "short"
+
+    response = TestClient(app).post(
+        "/customers", json=registration_details
+    )
+
+    assert response.status_code == 422
+    assert CustomerRepository().get_all_customers() == []
+
+
+def test_registration_cannot_choose_admin_role(
+    isolated_customers, registration_details
+):
+    registration_details["role"] = "admin"
+
+    response = TestClient(app).post(
+        "/customers", json=registration_details
+    )
+
+    assert response.status_code == 201
+    assert response.json()["role"] == "customer"
+
+    saved = CustomerRepository().get_by_id(response.json()["id"])
+    assert saved is not None
+    assert saved.role == "customer"
