@@ -4,7 +4,7 @@ from app.schemas.item_category import ItemCategory
 
 class Item(BaseModel):
     id: str = Field(..., description="Unique identifier for the food item", examples=["R1-beef-pie", "R3-shawarma"])
-    restaurant_id: int = Field(..., description="ID of the restaurant the item belongs to", examples=[1, 3])
+    restaurant_id: str = Field(..., description="ID of the restaurant the item belongs to", examples=["1", "3"])
     name: str = Field(..., description="Display name of the item", examples=["Beef Pie", "Shawarma"])
     cuisine: Cuisine = Field(..., description="The cuisine group that best fits this item")
     category: ItemCategory = Field(..., description="The food category that best fits this item")
