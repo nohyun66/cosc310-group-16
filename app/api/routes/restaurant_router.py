@@ -1,15 +1,19 @@
+from fastapi import APIRouter, Depends
 
-from fastapi import APIRouter
-from app.schemas.restaurant import Restaurant, RestaurantCreate
+from app.core.security import require_admin
 from app.schemas.item import Item
-from app.services.restaurant_service import RestaurantService
+from app.schemas.restaurant import Restaurant, RestaurantCreate
 from app.services.item_service import ItemService
+from app.services.restaurant_service import RestaurantService
 
 router = APIRouter(prefix="/restaurants", tags=["restaurants"])
 
 
 @router.get("", response_model=list[Restaurant])
-def get_all_restaurants(search: str | None = None, cuisine: str | None = None):
+def get_all_restaurants(
+    search: str | None = None,
+    cuisine: str | None = None,
+):
     if search is not None or cuisine is not None:
         return RestaurantService().search_restaurants(search, cuisine)
 
@@ -31,11 +35,35 @@ def get_menu_item(restaurant_id: str, item_id: str):
     return ItemService().get_menu_item(restaurant_id, item_id)
 
 
-@router.post("", response_model=Restaurant, status_code=201)
+@router.post(
+    "",
+    response_model=Restaurant,
+    status_code=201,
+    dependencies=[Depends(require_admin)],
+    responses={
+        401: {"description": "A valid sign-in token is required."},
+        403: {"description": "An active administrator account is required."},
+    },
+)
 def create_restaurant(restaurant_data: RestaurantCreate):
     return RestaurantService().create_restaurant(restaurant_data)
 
 
-@router.put("/{restaurant_id}", response_model=Restaurant)
-def update_restaurant(restaurant_id: str, restaurant_data: RestaurantCreate):
-    return RestaurantService().update_restaurant(restaurant_id, restaurant_data)
+@router.put(
+    "/{restaurant_id}",
+    response_model=Restaurant,
+    dependencies=[Depends(require_admin)],
+    responses={
+        401: {"description": "A valid sign-in token is required."},
+        403: {"description": "An active administrator account is required."},
+        404: {"description": "Restaurant not found."},
+    },
+)
+def update_restaurant(
+    restaurant_id: str,
+    restaurant_data: RestaurantCreate,
+):
+    return RestaurantService().update_restaurant(
+        restaurant_id,
+        restaurant_data,
+    )

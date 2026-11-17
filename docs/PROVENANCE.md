@@ -110,3 +110,37 @@ You normally do not need to record situations like:
 - Purpose: Update the Repository Structure to match current state
 - Influence: Adapted the generated markdown
 - PR: #29
+
+### Entry 10
+- Student(s): Logan 
+- Artifact: app/services/customer_service.py, tests/test_main.py
+- Label: AI-GENERATED
+- AI tool: ChatGPT
+- Purpose: Customer registration and structure 
+- Influence: Used and adapted generated registration code, password hashing & tests
+- Validation: all the 21 Pytest cases passed 
+- PR: #46
+
+### Entry 11
+- Student(s): Logan 
+- Artifact: app/services/auth_service.py, app/core/security.py, tests/test_main.py
+- Label: AI-GENERATED
+- AI tool: ChatGPT
+- Purpose: Implement the authentication and access restrictions for US-12
+- Influence: Used and adapted generated authentication code & tests, reads locally set JWT secret key without storing in Git 
+- Validation: checked using Pytest
+- PR: #47
+
+### Entry 12
+- Student(s): [Your name]
+- Artifact: README.md
+- Label: AI-GENERATED
+- AI tool: ChatGPT
+- Purpose: Document authentication setup and usage
+- Influence: Used and adapted instructions for the JWT secret key, sign-in, and local admin setup
+- Validation: By comparing the instructions with the authentication implementation
+- PR: #47
+
+
+
+
