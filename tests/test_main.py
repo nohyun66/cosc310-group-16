@@ -117,7 +117,7 @@ def test_create_menu_item(isolated_items):
 
     assert response.status_code == 201
     assert response.json()["id"] == "R1-test-item"
-    assert response.json()["restaurant_id"] == 1
+    assert response.json()["restaurant_id"] == "1"
 
     saved = ItemRepository().get_by_item_id("R1-test-item")
     assert saved is not None
