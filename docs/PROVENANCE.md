@@ -74,3 +74,39 @@ You normally do not need to record situations like:
 - Purpose: Update the Repository Structure to match current state
 - Influence: Adapted the generated markdown
 - PR: #2
+
+### Entry 6
+- Student(s): Tom
+- Artifact: web/index.html and restaurant.html
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Create a basic frontend given a series of (self-made) mockup images using existing endpoints
+- Influence: Used generated html files
+- PR: #28
+
+### Entry 7
+- Student(s): Tom
+- Artifact: tests/test_main.py
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Create tests for the new frontend
+- Influence: Used generated tests
+- PR: #28
+
+### Entry 8
+- Student(s): Tom
+- Artifact: tests/test_main.py
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Create tests for item creation/updating 
+- Influence: Used generated tests
+- PR: #27
+
+### Entry 9
+- Student(s): Tom
+- Artifact: README.md
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Update the Repository Structure to match current state
+- Influence: Adapted the generated markdown
+- PR: #29

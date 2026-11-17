@@ -1,6 +1,6 @@
 # COSC 310 Group 16
 
-> Team name: (TODO)
+> Team name: Todos
 
 ## Required Python version
 
@@ -87,24 +87,37 @@ python -m pytest -v
 ├── app/                         # FastAPI application
 │   ├── api/                     # API routes
 │   │   └── routes/
+│   │       ├── item_router.py
 │   │       └── restaurant_router.py
 │   ├── core/                    # Application configuration
+│   │   └── config.py
 │   ├── repositories/            # Data access layer
+│   │   ├── item_repository.py
 │   │   └── restaurant_repository.py
 │   ├── schemas/                 # Pydantic models and enums
 │   │   ├── cuisine.py
 │   │   ├── item.py
+│   │   ├── item_category.py
 │   │   └── restaurant.py
 │   ├── services/                # Application business logic
+│   │   ├── item_service.py
 │   │   └── restaurant_service.py
 │   └── main.py                  # FastAPI application entry point
+├── .github/
+│   └── workflows/
+│       └── tests.yml             # Automated test workflow
 ├── data/                        # Representative JSON data
 │   ├── items.json
 │   └── restaurants.json
+├── docs/                        # Project documentation
+│   └── PROVENANCE.md
 ├── scrum/                       # Team documentation
 │   └── team-agreement.md
 ├── tests/                       # Automated tests
 │   └── test_main.py
+├── web/                         # Basic frontend
+│   ├── index.html                # Restaurant search and listing
+│   └── restaurant.html           # Restaurant details and menu
 ├── requirements.txt             # Python dependencies
 ├── README.md                    # Project documentation
 └── .gitignore                   # Git ignore rules
