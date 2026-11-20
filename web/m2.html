@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Food Delivery — M2 Demo</title>
+<style>body{font:16px system-ui;max-width:780px;margin:30px auto;padding:0 14px}input,button,select{margin:5px;padding:8px}fieldset{margin-bottom:14px}pre{white-space:pre-wrap;background:#f3f3f3;padding:14px}button{cursor:pointer}</style>
+</head><body><h1>Food Delivery</h1><p>Milestone 2 customer-to-order demonstration</p>
+<fieldset><legend>1. Register / Sign in</legend><input id="name" placeholder="Name" value="Demo Customer"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password (8+ chars)"><input id="address" placeholder="Delivery address"><button onclick="register()">Register</button><button onclick="login()">Sign in</button>
+
+    <!--quick login for test purpose.-->
+    <button onclick="quickTestLogin()">Quick Test Login</button>
+    <!--quick login ends here. I will remove this when necessary.-->
+
+<div>
+    <button onclick="myProfile()">My Profile</button>
+    <button onclick="updateProfile()">Update Profile</button>
+    <button onclick="deactivateAccount()">Deactivate Account</button>
+</div>
+
+</fieldset>
+<fieldset><legend>2. Restaurants / Menu</legend><button onclick="restaurants()">Browse restaurants</button><select id="restaurants" onchange="menu()"><option value="">Select restaurant</option></select><div id="menu"></div></fieldset>
+<fieldset><legend>3. Cart / Checkout</legend><button onclick="cart()">Refresh cart</button><button onclick="clearCart()">Clear cart</button><button onclick="checkout()">Checkout</button><div id="cart"></div></fieldset>
+<fieldset><legend>4. Orders</legend><button onclick="orders()">My orders</button><div id="orders"></div></fieldset><pre id="status">Ready.</pre>
+<script>
+let token='';const $=id=>document.getElementById(id);
+async function api(path, method='GET', data){const r=await fetch(path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},...(data?{body:JSON.stringify(data)}:{})});const j=r.status===204?{}:await r.json();if(!r.ok)throw Error(JSON.stringify(j));return j}
+async function go(fn){try{$('status').textContent=JSON.stringify(await fn(),null,2)}catch(e){$('status').textContent=e.message}}
+async function register(){await go(()=>api('/customers/register','POST',{name:$('name').value,email:$('email').value,password:$('password').value,address:$('address').value}))}
+
+
+async function login() {
+    token = '';
+    $('cart').replaceChildren();
+    $('orders').replaceChildren();
+
+    await go(async () => {
+        const result = await api('/customers/login', 'POST', {
+            email: $('email').value,
+            password: $('password').value
+        });
+
+        token = result.access_token;
+        return 'Signed in';
+    });
+}
+
+
+
+//quick login function.
+async function quickTestLogin() {
+    $('name').value = 'Test Customer';
+    $('email').value = 'testcart03@example.com';
+    $('password').value = 'Test123456!';
+    $('address').value = '123 Test Street, Kelowna';
+
+    await login();
+}
+//quick login function ends here.
+
+async function myProfile() {
+    await go(async () => {
+        const profile = await api('/customers/me');
+
+        $('name').value = profile.name;
+        $('email').value = profile.email;
+        $('address').value = profile.address;
+
+        return profile;
+    });
+}
+
+async function updateProfile() {
+    await go(async () => {
+        const updated = await api('/customers/me', 'PATCH', {
+            name: $('name').value,
+            address: $('address').value
+        });
+
+        return updated;
+    });
+}
+
+async function deactivateAccount() {
+    if (!confirm('Are you sure you want to deactivate your account?')) {
+        return;
+    }
+
+    await go(async () => {
+        await api('/customers/me', 'DELETE');
+
+        token = '';
+        $('password').value = '';
+        $('cart').replaceChildren();
+        $('orders').replaceChildren();
+
+        return 'Account deactivated successfully';
+    });
+}
+
+async function restaurants(){await go(async()=>{const r=await api('/restaurants');$('restaurants').innerHTML='<option value="">Select restaurant</option>'+r.map(x=>`<option value="${x.id}">${x.name.replaceAll('<','&lt;')}</option>`).join('');return r})}
+async function menu(){const id=$('restaurants').value;if(!id)return;await go(async()=>{const items=await api(`/restaurants/${encodeURIComponent(id)}/menu`);$('menu').replaceChildren(...items.map(x=>{const div=document.createElement('div');const b=document.createElement('button');b.textContent=`Add ${x.name} — $${(x.price/100).toFixed(2)}`;b.onclick=()=>go(async()=>{const r=await api('/cart/items','POST',{item_id:x.id,quantity:1});showCart(r);return r});div.append(b);return div}));return items})}
+
+function showCart(c) {
+    const container = $('cart');
+    container.replaceChildren();
+
+    for (const item of c.items) {
+        const row = document.createElement('div');
+
+        const name = document.createElement('span');
+        name.textContent = `${item.name} × ${item.quantity} — $${(item.line_total_cents / 100).toFixed(2)}`;
+
+        row.appendChild(name);
+
+        const plus = document.createElement('button');
+        plus.textContent = '+';
+        plus.onclick = () => updateQuantity(
+            item.item_id,
+            item.quantity + 1
+        );
+
+        const minus = document.createElement('button');
+        minus.textContent = '−';
+        minus.onclick = () => {
+            if (item.quantity > 1) {
+                updateQuantity(item.item_id, item.quantity - 1);
+            } else {
+                removeCartItem(item.item_id);
+            }
+        };
+
+        const remove = document.createElement('button');
+        remove.textContent = 'Remove';
+        remove.onclick = () => removeCartItem(item.item_id);
+
+        row.append(plus, minus, remove);
+
+        container.appendChild(row);
+    }
+
+    const total = document.createElement('p');
+    total.textContent = `Total: $${(c.total_cents / 100).toFixed(2)}`;
+    container.appendChild(total);
+}
+
+async function updateQuantity(itemId, quantity) {
+    return go(async () => {
+        const updated = await api(
+            `/cart/items/${encodeURIComponent(itemId)}`,
+            'PUT',
+            { quantity }
+        );
+
+        showCart(updated);
+        return updated;
+    });
+}
+
+async function removeCartItem(itemId) {
+    return go(async () => {
+        const updated = await api(
+            `/cart/items/${encodeURIComponent(itemId)}`,
+            'DELETE'
+        );
+
+        showCart(updated);
+        return updated;
+    });
+}
+
+async function clearCart() {
+    if (!confirm('Are you sure you want to clear your cart?')) {
+        return;
+    }
+
+    return go(async () => {
+        const updated = await api('/cart', 'DELETE');
+        showCart(updated);
+        return updated;
+    });
+}
+
+async function cart(){await go(async()=>{const x=await api('/cart');showCart(x);return x})}
+
+
+async function checkout() {
+  let order;
+
+  try {
+    order = await api('/checkout', 'POST');
+  } catch (error) {
+    $('status').textContent = `Checkout failed: ${error.message}`;
+    return;
+  }
+
+  $('status').textContent =
+    `Order created successfully.\nOrder ID: ${order.id}`;
+
+  try {
+    const updatedCart = await api('/cart');
+    showCart(updatedCart);
+
+    const updatedOrders = await api('/orders');
+    $('orders').textContent = updatedOrders
+      .map(o => `${o.id}: $${(o.total_cents / 100).toFixed(2)} (${o.status})`)
+      .join('\n');
+  } catch (refreshError) {
+    $('status').textContent +=
+      `\nOrder saved, but page refresh failed: ${refreshError.message}`;
+  }
+}
+
+
+async function orders(){await go(async()=>{const x=await api('/orders');$('orders').textContent=x.map(o=>`${o.id}: $${(o.total_cents/100).toFixed(2)} (${o.status})`).join('\n');return x})}
+</script></body></html>
