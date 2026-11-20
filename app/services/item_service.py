@@ -91,6 +91,7 @@ class ItemService:
             cuisine=cuisine,
             category=category,
             price=price,
+            available=item.available,
             description=description,
             image_url=image_url,
         )

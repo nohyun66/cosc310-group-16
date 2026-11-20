@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from app.schemas.item import Item
-
+from app.repositories.json_storage import save_json
 DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "items.json"
 
 
@@ -41,13 +41,11 @@ class ItemRepository:
         items = self.get_all_items()
         items.append(new_item)
 
-        with open(DATA_PATH, "w", encoding="utf-8") as data_file:
-                    json.dump(
-                        [item.model_dump(mode="json") for item in items],
-                        data_file,
-                        indent=2
-                    )
-        
+        save_json(
+            DATA_PATH,
+            [item.model_dump(mode="json") for item in items]
+        )
+
         return new_item
 
     def update_item(self, updated_item: Item) -> Item | None:
@@ -57,12 +55,10 @@ class ItemRepository:
             if item.id == updated_item.id:
                 items[idx] = updated_item
 
-                with open(DATA_PATH, "w", encoding="utf-8") as data_file:
-                    json.dump(
-                        [item.model_dump(mode="json") for item in items],
-                        data_file,
-                        indent=2
-                    )
+                save_json(
+            DATA_PATH,
+            [item.model_dump(mode="json") for item in items]
+        )
 
                 return updated_item
 

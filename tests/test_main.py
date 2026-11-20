@@ -103,7 +103,7 @@ def test_missing_menu_item_returns_404(isolated_restaurants):
     assert response.status_code == 404
 
 
-def test_create_menu_item(isolated_items):
+def test_create_menu_item(isolated_items, admin_client):
     new_item = {
         "name": "Test Item",
         "cuisine": "ASIAN",
@@ -113,7 +113,7 @@ def test_create_menu_item(isolated_items):
         "image_url": "https://example.com/test-item.jpg",
     }
 
-    response = TestClient(app).post("/restaurants/1/menu", json=new_item)
+    response = admin_client.post("/restaurants/1/menu", json=new_item)
 
     assert response.status_code == 201
     assert response.json()["id"] == "R1-test-item"
@@ -124,7 +124,7 @@ def test_create_menu_item(isolated_items):
     assert saved.name == "Test Item"
 
 
-def test_create_menu_item_rejects_invalid_cuisine(isolated_items):
+def test_create_menu_item_rejects_invalid_cuisine(isolated_items, admin_client):
     new_item = {
         "name": "Test Item",
         "cuisine": "INVALID",
@@ -132,12 +132,12 @@ def test_create_menu_item_rejects_invalid_cuisine(isolated_items):
         "price": 999,
     }
 
-    response = TestClient(app).post("/restaurants/1/menu", json=new_item)
+    response = admin_client.post("/restaurants/1/menu", json=new_item)
 
     assert response.status_code == 422
 
 
-def test_update_menu_item(isolated_items):
+def test_update_menu_item(isolated_items, admin_client):
     updated_data = {
         "name": "Updated Beef Pie",
         "cuisine": "NORAM",
@@ -147,7 +147,7 @@ def test_update_menu_item(isolated_items):
         "image_url": "https://example.com/updated-beef-pie.jpg",
     }
 
-    response = TestClient(app).put(
+    response = admin_client.put(
         "/restaurants/1/menu/R1-beef-pie",
         json=updated_data,
     )
@@ -162,7 +162,7 @@ def test_update_menu_item(isolated_items):
     assert saved.description == "Updated description"
 
 
-def test_update_menu_item_returns_404_for_missing_item(isolated_items):
+def test_update_menu_item_returns_404_for_missing_item(isolated_items, admin_client):
     updated_data = {
         "name": "Unknown Item",
         "cuisine": "NORAM",
@@ -170,7 +170,7 @@ def test_update_menu_item_returns_404_for_missing_item(isolated_items):
         "price": 999,
     }
 
-    response = TestClient(app).put(
+    response = admin_client.put(
         "/restaurants/1/menu/does-not-exist",
         json=updated_data,
     )
@@ -193,7 +193,7 @@ def test_restaurant_cuisine_filter(isolated_restaurants):
     assert len(response.json()) == 1
     assert response.json()[0]["cuisine"] == "ASIAN"
 
-def test_create_restaurant(isolated_restaurants):
+def test_create_restaurant(isolated_restaurants, admin_client):
     new_restaurant = {
         "name": "Korean BBQ",
         "cuisine": "ASIAN",
@@ -203,7 +203,7 @@ def test_create_restaurant(isolated_restaurants):
         "rating": 4.5
     }
 
-    response = TestClient(app).post("/restaurants", json=new_restaurant)
+    response = admin_client.post("/restaurants", json=new_restaurant)
 
     assert response.status_code == 201
     assert response.json()["name"] == "Korean BBQ"
@@ -214,7 +214,7 @@ def test_create_restaurant(isolated_restaurants):
     assert saved is not None
     assert saved.name == "Korean BBQ"
 
-def test_update_restaurant(isolated_restaurants):
+def test_update_restaurant(isolated_restaurants, admin_client):
     updated_data = {
         "name": "Updated Korean BBQ",
         "cuisine": "ASIAN",
@@ -224,7 +224,7 @@ def test_update_restaurant(isolated_restaurants):
         "rating": 4.8
     }
 
-    response = TestClient(app).put("/restaurants/1", json=updated_data)
+    response = admin_client.put("/restaurants/1", json=updated_data)
 
     assert response.status_code == 200
     assert response.json()["id"] == "1"

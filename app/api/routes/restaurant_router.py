@@ -1,5 +1,6 @@
-
-from fastapi import APIRouter
+from fastapi import Depends
+from app.core.auth import require_admin
+from fastapi import APIRouter, Depends
 from app.schemas.restaurant import Restaurant, RestaurantCreate
 from app.schemas.item import Item
 from app.services.restaurant_service import RestaurantService
@@ -31,11 +32,20 @@ def get_menu_item(restaurant_id: str, item_id: str):
     return ItemService().get_menu_item(restaurant_id, item_id)
 
 
-@router.post("", response_model=Restaurant, status_code=201)
+@router.post(
+    "",
+    response_model=Restaurant,
+    status_code=201,
+    dependencies=[Depends(require_admin)]
+)
 def create_restaurant(restaurant_data: RestaurantCreate):
     return RestaurantService().create_restaurant(restaurant_data)
 
 
-@router.put("/{restaurant_id}", response_model=Restaurant)
+@router.put(
+    "/{restaurant_id}",
+    response_model=Restaurant,
+    dependencies=[Depends(require_admin)]
+)
 def update_restaurant(restaurant_id: str, restaurant_data: RestaurantCreate):
     return RestaurantService().update_restaurant(restaurant_id, restaurant_data)
