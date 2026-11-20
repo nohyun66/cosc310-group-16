@@ -122,3 +122,45 @@ python -m pytest -v
 ├── README.md                    # Project documentation
 └── .gitignore                   # Git ignore rules
 ```
+
+
+## Milestone 2
+
+For M2, we worked on connecting the different parts of our food ordering system so customers can actually go through the ordering process.
+
+Users can create an account, log in, browse restaurants, add food to their cart, and place an order. They can also change item quantities, remove items, and check their previous orders.
+
+We kept the cart limited to one restaurant at a time to make checkout easier to handle. The backend also checks things like item availability and whether a restaurant is open before creating an order.
+
+### How to run it
+
+Install the dependencies and start the server from the project folder:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
+
+Once the server is running, you can open:
+
+- `http://127.0.0.1:8000/` for the restaurant page
+- `http://127.0.0.1:8000/m2.html` for the ordering page
+- `http://127.0.0.1:8000/docs` for the API endpoints
+
+### Testing
+
+To run the tests:
+
+```powershell
+python -m pytest -q
+```
+
+I ran the full test suite locally on November 20, and all 50 tests passed.
+
+I also tested the frontend manually by logging in, choosing a restaurant, adding food to the cart, checking out, and viewing the order afterward. The checkout request returned 201, and the order showed up in the order history.
+
+### Notes
+
+Customer accounts, carts, and orders are saved in `data/commerce.json`. This file is ignored by Git since it contains local test data.
+
+I also kept some notes about the changes and problems I ran into in `docs/M2 Log.md`.
