@@ -36,7 +36,7 @@ You normally do not need to record situations like:
 - Label: AI-ASSISTED
 - AI tool: Copilot
 - Purpose: Recommend a better way of storing static categories
-- Influence: Adapted its suggestion of using StrEnum 
+- Influence: Adapted its suggestion of using StrEnum
 - PR: #2
 
 ### Entry 2
@@ -98,7 +98,7 @@ You normally do not need to record situations like:
 - Artifact: tests/test_main.py
 - Label: AI-GENERATED
 - AI tool: Copilot
-- Purpose: Create tests for item creation/updating 
+- Purpose: Create tests for item creation/updating
 - Influence: Used generated tests
 - PR: #27
 
@@ -110,3 +110,73 @@ You normally do not need to record situations like:
 - Purpose: Update the Repository Structure to match current state
 - Influence: Adapted the generated markdown
 - PR: #29
+
+### Entry 10
+- Student(s): Liu Shuai
+- Artifact: app/schemas/item.py, app/services/item_service.py, app/api/routes/item_router.py, tests/test_main.py
+- Label: AI-ASSISTED
+- AI tool: ChatGPT
+- Purpose: Fix syntax errors and improve menu item availability handling.
+- Influence: I wrote the main logic for handling item availability. I mainly used ChatGPT to double-check my syntax and figure out a weird indentation error I was stuck on. It also helped me brainstorm how to ensure the availability state stays consistent during updates.
+- Validation: Ran the item tests and made sure unavailable items stay unavailable unless explicitly changed. The initial 18 tests passed, and the latest full test run passed all 50 tests.
+- PR: #52
+
+### Entry 11
+- Student(s): Liu Shuai
+- Artifact: web/m2.html
+- Label: No-AI
+- AI tool: NA
+- Purpose: Implement a Quick Test Login feature to reduce repetitive manual input during frontend testing.
+- Influence: I got tired of typing the test account details every time I refreshed the page, so I searched online for some JS snippets to auto-fill them and trigger the login. I also fixed some broken HTML comment syntax so my dev notes wouldn't show up on the page.
+- Validation: Tested the shortcut locally and confirmed that the test account could successfully sign in through the existing authentication process.
+- PR: #53
+
+### Entry 12
+- Student(s): Liu Shuai
+- Artifact: app/services/commerce_service.py, app/api/routes/commerce_router.py, app/schemas/commerce.py, app/repositories/commerce_repository.py
+- Label: AI-ASSISTED
+- AI tool: ChatGPT
+- Purpose: Integrate customer accounts, shopping carts, checkout, and order persistence for Milestone 2.
+- Influence: I did the primary implementation for linking customer accounts, carts, and orders. I used ChatGPT mainly as a rubber duck鈥攈aving it review my integration logic and check for potential edge cases in the checkout flow. It helped me verify that my Pydantic schemas matched the frontend payloads.
+- Validation: Did a full manual run-through from adding to cart, to checkout, and checking saved orders. Also confirmed data persisted after restarting the app. The latest full test run passed all 50 tests.
+- PR: #50, #51, #52
+
+### Entry 13
+- Student(s): Liu Shuai
+- Artifact: app/repositories/json_storage.py, app/repositories/restaurant_repository.py, app/repositories/item_repository.py, tests/test_json_storage.py, tests/test_commerce_repository.py
+- Label: AI-ASSISTED
+- AI tool: Gemini
+- Purpose: Improve the reliability of JSON data persistence and reduce the risk of incomplete file writes.
+- Influence: I implemented the shared JSON storage function. When I was figuring out how to prevent partial file writes, I asked Gemini to review my approach. It pointed me towards the idea of using temporary files and os.replace, which I then integrated and tested myself.
+- Validation: Wrote tests simulating write failures to make sure original JSON files didn't get overwritten or damaged. I tested the JSON saving behavior, including what happens when a write fails.
+- PR: #49, #52
+
+### Entry 14
+- Student(s): Liu Shuai
+- Artifact: app/core/auth.py, app/api/routes/restaurant_router.py, app/api/routes/item_router.py, tests/test_m2_api_integration.py
+- Label: AI-ASSISTED
+- AI tool: Grok
+- Purpose: Implement role-based access control and provide a local administrator initialization method.
+- Influence: I worked on the RBAC logic for the restaurant and menu endpoints. I used Grok to check my FastAPI dependency injection syntax for the Bearer token, and asked it to review my role-based access control dependencies to see if there were any security loopholes. It helped me confirm my 401 vs 403 handling was correct.
+- Validation: Tested the auth flow鈥攇ot 401 when no token was provided, and 403 when logged in as a normal customer. Verified that failed requests didn't mess up the JSON data. The latest full test run passed all 50 tests.
+- PR: #52
+
+### Entry 15
+- Student(s): Liu Shuai
+- Artifact: app/schemas/item.py, tests/test_main.py, tests/test_commerce_m2.py
+- Label: AI-ASSISTED
+- AI tool: Deepseek
+- Purpose: Strengthen menu item price validation and checkout regression testing.
+- Influence: I wrote the new price validations and regression tests. I used Deepseek to brainstorm edge cases I might have missed (like restaurant mismatches or missing addresses) and to check if my test assertions were actually rigorous enough to catch those failures.
+- Validation: Ran targeted pytest files to ensure bad checkouts failed gracefully without creating orders or clearing the cart. The latest full test run passed all 50 tests.
+- PR: #51, #52
+
+### Entry 16
+- Student(s): Liu Shuai
+- Artifact: web/index.html, web/m2.html
+- Label: AI-ASSISTED
+- AI tool: Claude
+- Purpose: Connect the restaurant browsing page to the M2 ordering interface and improve frontend authentication and checkout feedback.
+- Influence: I wrote the frontend JS to link the pages and handle the UI feedback. I asked Claude to review my DOM manipulation code and check for any syntax errors. During my own testing, I caught a bug where old login data wasn't clearing, and Claude helped me verify the fix was robust.
+- Validation: Checked for JS syntax errors using Node.js, then tested manually in the browser. Went through login failures, successful checkout, and page refreshes to make sure the UI updated correctly. The latest full test run passed all 50 tests.
+- PR: #53
