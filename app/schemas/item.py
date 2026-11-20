@@ -15,10 +15,6 @@ class Item(BaseModel):
         default=True,
         description="Whether the item is currently available to order",
     )
-    is_active: bool = Field(
-        default=True,
-        description="Whether the item is active",
-    )
 
 class ItemCreate(BaseModel):
     name: str
@@ -31,4 +27,3 @@ class ItemCreate(BaseModel):
 
 class ItemStatusUpdate(BaseModel):
     is_available: bool
-    is_active: bool

@@ -35,10 +35,7 @@ def update_item(restaurant_id: str, item_id: str, updated_item: ItemCreate):
     "/{restaurant_id}/menu/{item_id}/status",
     response_model=Item,
     summary="Update menu-item availability",
-    description=(
-        "Change an item's availability and active status "
-        "without changing its other details."
-    ),
+    description="Change an item's availability without changing its other details.",
     responses={
         404: {"description": "Restaurant or menu item not found."},
     },
@@ -52,5 +49,4 @@ def update_item_status(
         restaurant_id=restaurant_id,
         item_id=item_id,
         is_available=status.is_available,
-        is_active=status.is_active,
     )

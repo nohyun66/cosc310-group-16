@@ -78,10 +78,17 @@ class ItemService:
         self.validate_menu_item(new_item)
         return self.repository.create_item(new_item)
 
-    def update_menu_item(self, item_id: str, restaurant_id: str, name: str, cuisine: Cuisine, 
-                         category: ItemCategory, price: int, 
-                         description: str = "Placeholder description", 
-                         image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
+    def update_menu_item(
+        self,
+        item_id: str,
+        restaurant_id: str,
+        name: str,
+        cuisine: Cuisine,
+        category: ItemCategory,
+        price: int,
+        description: str = "Placeholder description",
+        image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z",
+    ) -> Item:
         item = self.get_menu_item(restaurant_id, item_id)
 
         new_item = Item(
@@ -94,15 +101,15 @@ class ItemService:
             description=description,
             image_url=image_url,
             is_available=item.is_available,
-            is_active=item.is_active,
         )
 
         self.validate_menu_item(new_item)
         updated_item = self.repository.update_item(new_item)
+
         if updated_item is None:
             raise HTTPException(
                 status_code=404,
-                detail=f"Menu item {item_id} not found"
+                detail=f"Menu item {item_id} not found",
             )
 
         return updated_item
@@ -112,12 +119,9 @@ class ItemService:
         restaurant_id: str,
         item_id: str,
         is_available: bool,
-        is_active: bool,
     ) -> Item:
         item = self.get_menu_item(restaurant_id, item_id)
-
         item.is_available = is_available
-        item.is_active = is_active
 
         saved_item = self.repository.update_item(item)
 
@@ -136,17 +140,10 @@ class ItemService:
     ) -> Item:
         item = self.get_menu_item(restaurant_id, item_id)
 
-        if not item.is_active:
-            raise HTTPException(
-                status_code=409,
-                detail="Menu item is deactivated",
-            )
-
         if not item.is_available:
             raise HTTPException(
                 status_code=409,
                 detail="Menu item is unavailable",
             )
 
-        return item
-         
+        return item    
