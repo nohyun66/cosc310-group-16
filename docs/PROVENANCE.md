@@ -180,3 +180,39 @@ You normally do not need to record situations like:
 - Influence: I wrote the frontend JS to link the pages and handle the UI feedback. I asked Claude to review my DOM manipulation code and check for any syntax errors. During my own testing, I caught a bug where old login data wasn't clearing, and Claude helped me verify the fix was robust.
 - Validation: Checked for JS syntax errors using Node.js, then tested manually in the browser. Went through login failures, successful checkout, and page refreshes to make sure the UI updated correctly. The latest full test run passed all 50 tests.
 - PR: #53
+
+### Entry 17
+- Student(s): Tom
+- Artifact: commerce_service.py
+- Label: AI-ASSISTED
+- AI tool: Copilot
+- Purpose: Sought ideas on how exactly the service should be split.
+- Influence: Accepted the suggestions and manually split it into six services.
+- PR: #56
+
+### Entry 18
+- Student(s): Tom
+- Artifact: commerce_router.py
+- Label: AI-ASSISTED
+- AI tool: Copilot
+- Purpose: Sought ideas on how exactly the router should be split.
+- Influence: Accepted the suggestions and manually split it into four routers.
+- PR: #56
+
+### Entry 19
+- Student(s): Tom
+- Artifact: test_commerce_m2.py, test_m2_api_integration.py
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Fix the broken tests resulting from endpoints and imports being changed.
+- Influence: Adopted the amended tests.
+- PR: #56
+
+### Entry 20
+- Student(s): Tom
+- Artifact: README.md
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Update the Repository Structure to match current state
+- Influence: Adapted the generated markdown
+- PR: #56

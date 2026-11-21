@@ -63,6 +63,24 @@ Press `Ctrl+C` to exit the application.
 | `GET` | `/health` | Check whether the API is running |
 | `GET` | `/restaurants` | Get all restaurants |
 | `GET` | `/restaurants/{restaurant_id}` | Get one restaurant by ID |
+| `GET` | `/restaurants/{restaurant_id}/menu` | Get a restaurant menu |
+| `GET` | `/restaurants/{restaurant_id}/menu/{item_id}` | Get one menu item |
+| `POST` | `/customers/register` | Register a customer |
+| `POST` | `/customers/login` | Log in and receive a bearer token |
+| `GET` | `/customers/me` | Get the authenticated customer |
+| `PATCH` | `/customers/me` | Update the customer profile |
+| `DELETE` | `/customers/me` | Deactivate the customer account |
+| `GET` | `/cart` | Get the current cart |
+| `POST` | `/cart/items` | Add an item to the cart |
+| `PUT` | `/cart/items/{item_id}` | Update an item quantity |
+| `DELETE` | `/cart/items/{item_id}` | Remove an item from the cart |
+| `DELETE` | `/cart` | Clear the cart |
+| `POST` | `/checkout` | Create an order from the cart |
+| `GET` | `/orders` | List the customer's orders |
+| `GET` | `/orders/{order_id}` | Get one of the customer's orders |
+
+Protected endpoints require a bearer token. To receive one, login with valid credentials 
+and a token will be included in the response body.
 
 ## /docs path:
     http://127.0.0.1:8000/docs
@@ -71,8 +89,9 @@ Press `Ctrl+C` to exit the application.
 The representative data is stored in:
 
 ```text
-restaurants.json
-items.json
+data/restaurants.json
+data/items.json
+data/commerce.json
 ```
 
 ## How to run tests:
@@ -87,26 +106,44 @@ python -m pytest -v
 ├── app/                         # FastAPI application
 │   ├── api/                     # API routes
 │   │   └── routes/
+│   │       ├── auth_router.py
+│   │       ├── cart_router.py
+│   │       ├── customer_router.py
 │   │       ├── item_router.py
+│   │       ├── order_router.py
 │   │       └── restaurant_router.py
 │   ├── core/                    # Application configuration
+│   │   ├── auth.py
 │   │   └── config.py
 │   ├── repositories/            # Data access layer
+│   │   ├── commerce_repository.py
 │   │   ├── item_repository.py
+│   │   ├── json_storage.py
 │   │   └── restaurant_repository.py
 │   ├── schemas/                 # Pydantic models and enums
+│   │   ├── authorization.py
+│   │   ├── cart.py
 │   │   ├── cuisine.py
+│   │   ├── customer.py
 │   │   ├── item.py
 │   │   ├── item_category.py
+│   │   ├── order.py
 │   │   └── restaurant.py
 │   ├── services/                # Application business logic
+│   │   ├── auth_service.py
+│   │   ├── cart_service.py
+│   │   ├── commerce_services.py
+│   │   ├── customer_service.py
 │   │   ├── item_service.py
-│   │   └── restaurant_service.py
+│   │   ├── order_service.py
+│   │   ├── restaurant_service.py
+│   │   └── util.py
 │   └── main.py                  # FastAPI application entry point
 ├── .github/
 │   └── workflows/
 │       └── tests.yml             # Automated test workflow
 ├── data/                        # Representative JSON data
+│   ├── commerce.json
 │   ├── items.json
 │   └── restaurants.json
 ├── docs/                        # Project documentation
@@ -154,13 +191,3 @@ To run the tests:
 ```powershell
 python -m pytest -q
 ```
-
-I ran the full test suite locally on November 20, and all 50 tests passed.
-
-I also tested the frontend manually by logging in, choosing a restaurant, adding food to the cart, checking out, and viewing the order afterward. The checkout request returned 201, and the order showed up in the order history.
-
-### Notes
-
-Customer accounts, carts, and orders are saved in `data/commerce.json`. This file is ignored by Git since it contains local test data.
-
-I also kept some notes about the changes and problems I ran into in `docs/M2 Log.md`.
