@@ -1,12 +1,21 @@
 from fastapi.testclient import TestClient
 from app.main import app
-from app.api.routes.commerce_router import service
+from app.api.routes.auth_router import service as auth_service
+from app.api.routes.customer_router import service as customer_service
+from app.api.routes.cart_router import service as cart_service
+from app.api.routes.order_router import service as order_service
 from app.repositories.commerce_repository import CommerceRepository
 
 
+def isolate_commerce_services(tmp_path, monkeypatch):
+    repo = CommerceRepository(tmp_path / "commerce.json")
+    for service in (auth_service, customer_service, cart_service, order_service):
+        monkeypatch.setattr(service, "repo", repo)
+    monkeypatch.setattr(auth_service, "sessions", {})
+
+
 def test_real_menu_to_order_via_api(tmp_path, monkeypatch):
-    monkeypatch.setattr(service, 'repo', CommerceRepository(tmp_path / 'commerce.json'))
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
     client = TestClient(app)
     customer = client.post('/customers/register', json={
         'name': 'Demo', 'email': 'demo@example.com',
@@ -41,8 +50,7 @@ def test_real_menu_availability_round_trip(tmp_path, monkeypatch):
     temp = tmp_path / 'items.json'
     temp.write_text(source.read_text(encoding='utf-8'), encoding='utf-8')
     monkeypatch.setattr(item_repository, 'DATA_PATH', temp)
-    monkeypatch.setattr(service, 'repo', CommerceRepository(tmp_path / 'commerce.json'))
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
     client = TestClient(app)
     client.post('/customers/register', json={'name':'Demo','email':'other@example.com','password':'secret1234','address':'123 St'})
     token = client.post('/customers/login',json={'email':'other@example.com','password':'secret1234'}).json()['access_token']
@@ -59,12 +67,7 @@ def test_real_menu_availability_round_trip(tmp_path, monkeypatch):
     assert client.delete(f"/cart/items/{item['id']}",headers=auth).status_code == 200
 
 def test_deactivated_customer_cannot_access_cart(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        service, 'repo',
-        CommerceRepository(tmp_path / 'commerce.json')
-    )
-
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
 
     client = TestClient(app)
 
@@ -134,12 +137,7 @@ def test_customer_cannot_modify_restaurant_or_menu(
     tmp_path, monkeypatch, isolated_restaurants, isolated_items
 ):
 
-    monkeypatch.setattr(
-        service, 'repo',
-        CommerceRepository(tmp_path / 'commerce.json')
-    )
-
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
 
     client = TestClient(app)
 
@@ -196,12 +194,7 @@ def test_customer_cannot_modify_restaurant_or_menu(
 
 
 def test_updated_customer_address_used_at_checkout(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        service, 'repo',
-        CommerceRepository(tmp_path / 'commerce.json')
-    )
-
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
 
     client = TestClient(app)
 
@@ -258,12 +251,7 @@ def test_updated_customer_address_used_at_checkout(tmp_path, monkeypatch):
     assert saved['orders'][order_id]['delivery_address'] == '456 New Street'
 
 def test_order_address_does_not_change_after_profile_update(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        service, 'repo',
-        CommerceRepository(tmp_path / 'commerce.json')
-    )
-
-    monkeypatch.setattr(service, 'sessions', {})
+    isolate_commerce_services(tmp_path, monkeypatch)
 
     client = TestClient(app)
 
