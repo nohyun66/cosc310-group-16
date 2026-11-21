@@ -158,9 +158,7 @@ Move the shared service into a separate module and use one authentication check.
 I chose the second approach to reduce duplication and also the separation of responsibilities.
 
 Implementation:
-I created app/core/dependencies.py to hold the shared CommerceService instance.
-I updated app/core/auth.py and app/api/routes/commerce_router.py to use that service directly.
-Commerce and admin routes now use the same current_user authentication check.
+Removed the duplicate authentication dependency from auth_router.py. Customer, cart, and order routers now import current_user from app/core/auth.py, which admin checks also use. Reused the shared services introduced in PR #56.
 
 Testing and Validation:
 I added tests/test_shared_authentication.py to check registration, login, menu retrieval, cart operations, admin permissions, and checkout using the same token.

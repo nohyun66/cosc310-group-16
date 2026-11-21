@@ -1,17 +1,29 @@
-# integration test 
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.core.dependencies import commerce_service
 from app.repositories.commerce_repository import CommerceRepository
+from app.services.commerce_services import (
+    auth_service,
+    cart_service,
+    customer_service,
+    order_service,
+)
 
 
 def test_shared_login_across_commerce_and_admin_routes(
     tmp_path, monkeypatch, isolated_items
 ):
     repository = CommerceRepository(tmp_path / "commerce.json")
-    monkeypatch.setattr(commerce_service, "repo", repository)
-    monkeypatch.setattr(commerce_service, "sessions", {})
+
+    for service in (
+        auth_service,
+        customer_service,
+        cart_service,
+        order_service,
+    ):
+        monkeypatch.setattr(service, "repo", repository)
+
+    monkeypatch.setattr(auth_service, "sessions", {})
 
     client = TestClient(app)
 
@@ -44,7 +56,9 @@ def test_shared_login_across_commerce_and_admin_routes(
     assert response.status_code == 200
     assert response.json()["id"] == customer_id
 
-    item = client.get("/restaurants/1/menu/R1-beef-pie").json()
+    response = client.get("/restaurants/1/menu/R1-beef-pie")
+    assert response.status_code == 200
+    item = response.json()
 
     response = client.post(
         "/cart/items",
@@ -66,7 +80,7 @@ def test_shared_login_across_commerce_and_admin_routes(
         )
     }
 
-    # customer token cannot perform an admin operation
+    # A customer cannot perform an admin operation.
     response = client.put(
         "/restaurants/1/menu/R1-beef-pie",
         headers=headers,
@@ -74,12 +88,12 @@ def test_shared_login_across_commerce_and_admin_routes(
     )
     assert response.status_code == 403
 
-    # change the role only in temporary test storage
+    # Change the role only in temporary test storage.
     data = repository.read()
     data["customers"][customer_id]["role"] = "admin"
     repository.save(data)
 
-    # the same token works through the admin authentication dependency
+    # The same token is recognized by the admin check.
     response = client.put(
         "/restaurants/1/menu/R1-beef-pie",
         headers=headers,

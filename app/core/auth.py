@@ -1,8 +1,7 @@
-# This is to check the user's role before allowing restaurant changes.
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.core.dependencies import commerce_service
+from app.services.commerce_services import auth_service
 
 bearer = HTTPBearer(auto_error=False)
 
@@ -11,7 +10,7 @@ def current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
 ):
     token = credentials.credentials if credentials else None
-    return commerce_service.authenticated(token)
+    return auth_service.authenticated(token)
 
 
 def require_admin(user: dict = Depends(current_user)):
@@ -20,4 +19,5 @@ def require_admin(user: dict = Depends(current_user)):
             status_code=403,
             detail="Admin access required",
         )
+
     return user

@@ -181,12 +181,48 @@ You normally do not need to record situations like:
 - Validation: Checked for JS syntax errors using Node.js, then tested manually in the browser. Went through login failures, successful checkout, and page refreshes to make sure the UI updated correctly. The latest full test run passed all 50 tests.
 - PR: #53
 
-### Entry 17 
-- Student(s): Logan 
-- Artifact: app/core/dependencies.py, app/core/auth.py, app/api/routes/commerce_router.py, tests/test_shared_authentication.py, docs/M2 Log.md
-- Label:  AI-GENERATED
+### Entry 17
+- Student(s): Tom
+- Artifact: commerce_service.py
+- Label: AI-ASSISTED
+- AI tool: Copilot
+- Purpose: Sought ideas on how exactly the service should be split.
+- Influence: Accepted the suggestions and manually split it into six services.
+- PR: #56
+
+### Entry 18
+- Student(s): Tom
+- Artifact: commerce_router.py
+- Label: AI-ASSISTED
+- AI tool: Copilot
+- Purpose: Sought ideas on how exactly the router should be split.
+- Influence: Accepted the suggestions and manually split it into four routers.
+- PR: #56
+
+### Entry 19
+- Student(s): Tom
+- Artifact: test_commerce_m2.py, test_m2_api_integration.py
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Fix the broken tests resulting from endpoints and imports being changed.
+- Influence: Adopted the amended tests.
+- PR: #56
+
+### Entry 20
+- Student(s): Tom
+- Artifact: README.md
+- Label: AI-GENERATED
+- AI tool: Copilot
+- Purpose: Update the Repository Structure to match current state
+- Influence: Adapted the generated markdown
+- PR: #56
+
+### Entry 21
+- Student(s): Logan
+- Artifact: app/core/auth.py, app/api/routes/auth_router.py, app/api/routes/customer_router.py, app/api/routes/cart_router.py, app/api/routes/order_router.py, tests/test_shared_authentication.py, docs/M2 Log.md
+- Label: AI-GENERATED
 - AI tool: ChatGPT
-- Purpose: Consolidate authentication checks and remove security's dependency on the router
-- Influence: Used and adapted generated refactoring code, integration test, and documentation
-- Validation: All 51 tests have passed 
-- PR: #57 
+- Purpose: Consolidate authentication checks across the separate routers
+- Influence: Used and adapted generated refactoring code, integration test, documentation, and merge-resolution guidance.
+- Validation: Updated the integration test for the separate services; final test run pending.
+- PR: #57

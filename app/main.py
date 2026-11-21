@@ -4,7 +4,10 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.api.routes.restaurant_router import router as restaurant_router
 from app.api.routes.item_router import router as item_router
-from app.api.routes.commerce_router import router as commerce_router
+from app.api.routes.auth_router import router as auth_router
+from app.api.routes.customer_router import router as customer_router
+from app.api.routes.cart_router import router as cart_router
+from app.api.routes.order_router import router as order_router
 
 app = FastAPI(
     title="COSC 310 Group 16",
@@ -13,7 +16,10 @@ app = FastAPI(
 
 app.include_router(restaurant_router)
 app.include_router(item_router)
-app.include_router(commerce_router)
+app.include_router(auth_router)
+app.include_router(customer_router)
+app.include_router(cart_router)
+app.include_router(order_router)
 
 @app.get("/health")
 def health():
