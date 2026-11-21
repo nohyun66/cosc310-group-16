@@ -1,4 +1,3 @@
-# This is to check the user's role before allowing restaurant changes.
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -20,4 +19,5 @@ def require_admin(user: dict = Depends(current_user)):
             status_code=403,
             detail="Admin access required",
         )
+
     return user

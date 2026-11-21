@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.api.routes.auth_router import current_user
+from app.core.auth import current_user
 from app.schemas.cart import CartAdd, CartResponse, QuantityUpdate
 from app.schemas.order import OrderResponse
 from app.services.commerce_services import cart_service

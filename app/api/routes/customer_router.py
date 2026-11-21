@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.api.routes.auth_router import current_user
+from app.core.auth import current_user
 from app.schemas.customer import CustomerResponse, CustomerUpdate
 from app.services.commerce_services import customer_service
 

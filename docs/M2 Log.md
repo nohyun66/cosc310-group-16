@@ -145,6 +145,36 @@ GitHub Evidence:
 Files: app/core/auth.py, app/api/routes/restaurant_router.py, app/api/routes/item_router.py, tests/test_m2_api_integration.py
 PR: #52
 
+Item 6
+Shared Authentication 
+Architecture Improvement / Decision Receipt
+
+Problem:
+Authentication checks were duplicated in the commerce router and security module. Security code also depended on the router to access the shared service.
+
+Options Considered:
+Keep the separate authentication checks and access the service through the router.
+Move the shared service into a separate module and use one authentication check.
+I chose the second approach to reduce duplication and also the separation of responsibilities.
+
+Implementation:
+Removed the duplicate authentication dependency from auth_router.py. Customer, cart, and order routers now import current_user from app/core/auth.py, which admin checks also use. Reused the shared services introduced in PR #56.
+
+Testing and Validation:
+I added tests/test_shared_authentication.py to check registration, login, menu retrieval, cart operations, admin permissions, and checkout using the same token.
+The test uses temporary storage.
+All 51 tests passed.
+
+Reflection:
+This change makes authentication easier to maintain because the shared check only needs to be updated in one place. It adds one small module while preserving existing functionality and login sessions.
+
+AI Assistance:
+I used ChatGPT for implementation suggestions, integration tests, and debugging guidance. 
+
+GitHub Evidence:
+Files: app/core/dependencies.py, app/core/auth.py, app/api/routes/commerce_router.py, tests/test_shared_authentication.py
+PR: #57
+
 Final Integration Check November 20, 2026
 After splitting the M2 work into smaller PRs, I ran the full test suite again and got 50 passed with one warning.
 I also tested the ordering flow in the browser. Login, restaurant browsing, adding items to the cart, checkout, and order history all worked. Checkout returned 201 and the order appeared in the order history.
