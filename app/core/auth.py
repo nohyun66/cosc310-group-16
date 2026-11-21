@@ -2,7 +2,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.api.routes import commerce_router
+from app.core.dependencies import commerce_service
 
 bearer = HTTPBearer(auto_error=False)
 
@@ -11,7 +11,7 @@ def current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
 ):
     token = credentials.credentials if credentials else None
-    return commerce_router.service.authenticated(token)
+    return commerce_service.authenticated(token)
 
 
 def require_admin(user: dict = Depends(current_user)):

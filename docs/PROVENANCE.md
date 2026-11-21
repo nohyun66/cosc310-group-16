@@ -180,3 +180,13 @@ You normally do not need to record situations like:
 - Influence: I wrote the frontend JS to link the pages and handle the UI feedback. I asked Claude to review my DOM manipulation code and check for any syntax errors. During my own testing, I caught a bug where old login data wasn't clearing, and Claude helped me verify the fix was robust.
 - Validation: Checked for JS syntax errors using Node.js, then tested manually in the browser. Went through login failures, successful checkout, and page refreshes to make sure the UI updated correctly. The latest full test run passed all 50 tests.
 - PR: #53
+
+### Entry 17 
+- Student(s): Logan 
+- Artifact: app/core/dependencies.py, app/core/auth.py, app/api/routes/commerce_router.py, tests/test_shared_authentication.py, docs/M2 Log.md
+- Label:  AI-GENERATED
+- AI tool: ChatGPT
+- Purpose: Consolidate authentication checks and remove security's dependency on the router
+- Influence: Used and adapted generated refactoring code, integration test, and documentation
+- Validation: All 51 tests have passed 
+- PR: #57 
