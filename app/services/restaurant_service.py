@@ -17,6 +17,13 @@ class RestaurantService:
         if restaurant:
             return restaurant 
         raise HTTPException(status_code=404, detail=f"Restaurant ID: {restaurant_id} not found")
+    
+    def get_open_restaurant(self, restaurant_id: str) -> Restaurant:
+        restaurant = self.get_restaurant_by_id(restaurant_id)
+        if not restaurant.is_open:
+            raise HTTPException(status_code=409, detail=f"Restaurant ID: {restaurant_id} is currently closed")
+        return restaurant
+    
     def search_restaurants(self, search: str | None = None, cuisine: str | None = None) -> list[Restaurant]:
         restaurants = self.repository.get_all_restaurants() or []
 

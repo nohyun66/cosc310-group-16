@@ -44,6 +44,18 @@ class ItemService:
             )
 
         return item
+    
+    def get_item(self, item_id:str) -> Item:
+        item = self.repository.get_by_item_id(item_id)
+        if not item:
+            raise HTTPException(404, detail=f"Item {item_id} not found")
+        return item
+        
+    def get_available_item(self, item_id) -> Item:
+        item = self.get_item(item_id)
+        if not item.available:
+            raise HTTPException(409, detail=f"Item {item_id} is currently not available")
+        return item            
 
     def validate_menu_item(self, item: Item) -> None:
         if self.restaurant_repository.get_by_id(item.restaurant_id) is None:
@@ -59,7 +71,7 @@ class ItemService:
         return None
 
     def create_menu_item(self, restaurant_id: str, name: str, cuisine: Cuisine, 
-                         category: ItemCategory, price: int, 
+                         category: ItemCategory, price: int, available: bool,
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
 
@@ -72,14 +84,14 @@ class ItemService:
                     detail=f"Item ID: {new_item_id} already exists")        
         
         new_item = Item(id=new_item_id, restaurant_id=restaurant_id, name=name, 
-                              cuisine=cuisine, category=category, price=price,
+                              cuisine=cuisine, category=category, price=price, available=available,
                               description=description, image_url=image_url)
 
         self.validate_menu_item(new_item)
         return self.repository.create_item(new_item)
 
     def update_menu_item(self, item_id: str, restaurant_id: str, name: str, cuisine: Cuisine, 
-                         category: ItemCategory, price: int, 
+                         category: ItemCategory, price: int, available: bool, 
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
         item = self.get_menu_item(restaurant_id, item_id)
@@ -91,7 +103,7 @@ class ItemService:
             cuisine=cuisine,
             category=category,
             price=price,
-            available=item.available,
+            available=available,
             description=description,
             image_url=image_url,
         )
