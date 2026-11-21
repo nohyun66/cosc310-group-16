@@ -71,7 +71,7 @@ class ItemService:
         return None
 
     def create_menu_item(self, restaurant_id: str, name: str, cuisine: Cuisine, 
-                         category: ItemCategory, price: int, 
+                         category: ItemCategory, price: int, available: bool,
                          description: str = "Placeholder description", 
                          image_url: HttpUrl = "https://imgur.com/a/LCCoa9Z") -> Item:
 
@@ -84,7 +84,7 @@ class ItemService:
                     detail=f"Item ID: {new_item_id} already exists")        
         
         new_item = Item(id=new_item_id, restaurant_id=restaurant_id, name=name, 
-                              cuisine=cuisine, category=category, price=price,
+                              cuisine=cuisine, category=category, price=price, available=available,
                               description=description, image_url=image_url)
 
         self.validate_menu_item(new_item)
